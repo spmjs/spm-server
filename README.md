@@ -27,5 +27,6 @@ $ spm-server [options]
 
 ## Options
 
-* `-b, --base`, base path in production
-* `--id-leading`, prefix of module name, default: {{name}}/{{version}}
+* `-p, --port <port>`, server port, default: `8000`
+* `-b, --base <path>`, base path to access package in production
+* `--idleading <idleading>`, prefix of module name, default: `{{name}}/{{version}}`
