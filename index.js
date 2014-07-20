@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 
 var join = require('path').join;
+var relative = require('path').relative;
 var program = require('commander');
 var express = require('express');
+var tinylr = require('tiny-lr');
+var Gaze = require('gaze');
 var serveSPM = require('serve-spm');
 var util = require('./util');
 
@@ -43,4 +46,22 @@ util.isPortInUse(program.port || DEFAULT_PORT, function(port) {
 }, function(err, port) {
   app.listen(port);
   console.log('listen on %s', port);
+});
+
+// Livereload.
+var port = process.env.LR_PORT || 35729;
+var server = tinylr();
+server.listen(port, function(err) {
+  if (err) {
+    console.log('livereload error: %s', err);
+    return;
+  }
+  console.log('livereload: listened on %s', port);
+
+  var gaze = new Gaze(['**', '!./{node-modules,sea-modules}/**'], {});
+  gaze.on('all', function(event, filepath) {
+    server.changed({body: {files:[filepath]}});
+    var relativePath = relative(process.cwd(), filepath);
+    console.log('%s was %s', relativePath, event);
+  });
 });
