@@ -15,7 +15,8 @@ program
   .version(require('./package').version, '-v, --version')
   .option('-p, --port <port>', 'server port, default: 8000')
   .option('-b, --base <path>', 'base path to access package in production')
-  .option('--idleading [idleading]', 'prefix of module name, default: {{name}}/{{version}}')
+  .option('--idleading <idleading>', 'prefix of module name, default: {{name}}/{{version}}')
+  .option('--no-livereload', 'disable livereload')
   .parse(process.argv);
 
 var app = express();
@@ -49,19 +50,21 @@ util.isPortInUse(program.port || DEFAULT_PORT, function(port) {
 });
 
 // Livereload.
-var port = process.env.LR_PORT || 35729;
-var server = tinylr();
-server.listen(port, function(err) {
-  if (err) {
-    console.log('livereload error: %s', err);
-    return;
-  }
-  console.log('livereload: listened on %s', port);
+if (program.livereload) {
+  var port = process.env.LR_PORT || 35729;
+  var server = tinylr();
+  server.listen(port, function(err) {
+    if (err) {
+      console.log('livereload error: %s', err);
+      return;
+    }
+    console.log('livereload: listened on %s', port);
 
-  var gaze = new Gaze(['**', '!./{node-modules,sea-modules}/**'], {});
-  gaze.on('all', function(event, filepath) {
-    server.changed({body: {files:[filepath]}});
-    var relativePath = relative(process.cwd(), filepath);
-    console.log('%s was %s', relativePath, event);
+    var gaze = new Gaze(['**', '!./{node-modules,sea-modules}/**'], {});
+    gaze.on('all', function(event, filepath) {
+      server.changed({body: {files:[filepath]}});
+      var relativePath = relative(process.cwd(), filepath);
+      console.log('%s was %s', relativePath, event);
+    });
   });
-});
+}
