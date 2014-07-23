@@ -22,7 +22,7 @@ program
 
 var app = express();
 
-// Map.
+// Map dist to src.
 app.use(function(req, res, next) {
   var base = program.base || 'dist';
   var idleading = program.idleading || '{{name}}/{{version}}';
