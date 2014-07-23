@@ -7,6 +7,7 @@ var express = require('express');
 var tinylr = require('tiny-lr');
 var Gaze = require('gaze');
 var serveSPM = require('serve-spm');
+var log = require('spm-log');
 var util = require('./util');
 
 var DEFAULT_PORT = 8000;
@@ -43,10 +44,10 @@ app.use(serveSPM(process.cwd()));
 
 // Listen.
 util.isPortInUse(program.port || DEFAULT_PORT, function(port) {
-  console.log('[error] port %s is in use', port);
+  log.error('server', 'port %s in in use', port);
 }, function(err, port) {
   app.listen(port);
-  console.log('listen on %s', port);
+  log.info('server', 'listen on %s', port);
 });
 
 // Livereload.
@@ -55,16 +56,16 @@ if (program.livereload) {
   var server = tinylr();
   server.listen(port, function(err) {
     if (err) {
-      console.log('livereload error: %s', err);
+      log.error('livereload', err);
       return;
     }
-    console.log('livereload: listened on %s', port);
+    log.info('livereload', 'listened on %s', port);
 
     var gaze = new Gaze(['**', '!./{node-modules,sea-modules}/**'], {});
     gaze.on('all', function(event, filepath) {
       server.changed({body: {files:[filepath]}});
       var relativePath = relative(process.cwd(), filepath);
-      console.log('%s was %s', relativePath, event);
+      log.info('livereload', '%s was %s', relativePath, event);
     });
   });
 }
