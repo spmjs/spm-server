@@ -17,7 +17,7 @@ program
   .option('-p, --port <port>', 'server port, default: 8000')
   .option('-b, --base <path>', 'base path to access package in production')
   .option('--idleading <idleading>', 'prefix of module name, default: {{name}}/{{version}}')
-  .option('--no-livereload', 'disable livereload')
+  .option('--livereload', 'enable livereload')
   .parse(process.argv);
 
 var app = express();
