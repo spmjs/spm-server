@@ -30,4 +30,4 @@ $ spm-server [options]
 * `-p, --port <port>`, server port, default: `8000`
 * `-b, --base <path>`, base path to access package in production
 * `--idleading <idleading>`, prefix of module name, default: `{{name}}/{{version}}`
-* `--no-livereload`, disable livereload
+* `--livereload`, enable livereload
