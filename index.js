@@ -10,6 +10,7 @@ var Gaze = require('gaze');
 var serveSPM = require('serve-spm');
 var log = require('spm-log');
 var httpProxy = require('http-proxy');
+var combo = require('connect-combo');
 var util = require('./util');
 
 var DEFAULT_PORT = 8000;
@@ -43,7 +44,16 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(serveSPM(process.cwd()));
+app.use(serveSPM(process.cwd({
+  log: true
+})));
+app.use(combo({
+  directory: join(process.cwd(), 'dist'),
+  proxy: 'https://a.alipayobjects.com',
+  cache: true,
+  log: true,
+  static: true
+}));
 
 // Listen.
 util.isPortInUse(program.port || DEFAULT_PORT, function(port) {
@@ -56,8 +66,8 @@ util.isPortInUse(program.port || DEFAULT_PORT, function(port) {
   if (program.https) {
     httpProxy.createServer({
       ssl: {
-        key: fs.readFileSync(join(__dirname, 'keys/key.pem'), 'utf-8'),
-        cert: fs.readFileSync(join(__dirname, 'keys/cert.pem'), 'utf-8')
+        key: fs.readFileSync(join(__dirname, 'keys/key.pem')),
+        cert: fs.readFileSync(join(__dirname, 'keys/cert.pem'))
       },
       target: 'http://localhost:' + port,
       secure: true

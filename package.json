@@ -24,6 +24,7 @@
   "homepage": "https://github.com/spmjs/spm-server",
   "dependencies": {
     "commander": "2.3.0",
+    "connect-combo": "^0.2.5",
     "express": "4.7.4",
     "gaze": "0.6.4",
     "http-proxy": "1.1.6",
@@ -31,7 +32,5 @@
     "spm-log": "0.1.0",
     "tiny-lr": "0.0.9"
   },
-  "devDependencies": {
-
-  }
+  "devDependencies": {}
 }
