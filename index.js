@@ -50,7 +50,7 @@ app.use(serveSPM(process.cwd({
 
 app.use(combo({
   directory: join(process.cwd(), 'dist'),
-  proxy: 'https://a.alipayobjects.com',
+  proxy: process.env.ONLINE_SERVER || 'https://a.alipayobjects.com',
   cache: true,
   log: true,
   static: true
