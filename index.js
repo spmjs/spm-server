@@ -44,9 +44,9 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(serveSPM(process.cwd({
+app.use(serveSPM(process.cwd(), {
   log: true
-})));
+}));
 
 app.use(combo({
   directory: join(process.cwd(), 'dist'),
