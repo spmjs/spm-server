@@ -47,6 +47,7 @@ app.use(function(req, res, next) {
 app.use(serveSPM(process.cwd({
   log: true
 })));
+
 app.use(combo({
   directory: join(process.cwd(), 'dist'),
   proxy: 'https://a.alipayobjects.com',
