@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var join = require('path').join;
+var fs = require('fs');
 var relative = require('path').relative;
 var program = require('commander');
 var express = require('express');
@@ -8,6 +9,7 @@ var tinylr = require('tiny-lr');
 var Gaze = require('gaze');
 var serveSPM = require('serve-spm');
 var log = require('spm-log');
+var httpProxy = require('http-proxy');
 var util = require('./util');
 
 var DEFAULT_PORT = 8000;
@@ -17,6 +19,7 @@ program
   .option('-p, --port <port>', 'server port, default: 8000')
   .option('-b, --base <path>', 'base path to access package in production')
   .option('--idleading <idleading>', 'prefix of module name, default: {{name}}/{{version}}')
+  .option('--https', 'enable https proxy')
   .option('--livereload', 'enable livereload')
   .parse(process.argv);
 
@@ -48,6 +51,18 @@ util.isPortInUse(program.port || DEFAULT_PORT, function(port) {
 }, function(err, port) {
   app.listen(port);
   log.info('server', 'listen on %s', port);
+
+  // Https.
+  if (program.https) {
+    httpProxy.createServer({
+      ssl: {
+        key: fs.readFileSync(join(__dirname, 'keys/key.pem'), 'utf-8'),
+        cert: fs.readFileSync(join(__dirname, 'keys/cert.pem'), 'utf-8')
+      },
+      target: 'http://localhost:' + port,
+      secure: true
+    }).listen(443);
+  }
 });
 
 // Livereload.

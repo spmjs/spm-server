@@ -23,11 +23,15 @@
   },
   "homepage": "https://github.com/spmjs/spm-server",
   "dependencies": {
-    "commander": "^2.3.0",
-    "express": "^4.6.1",
-    "gaze": "^0.6.4",
-    "serve-spm": "^0.3.7",
-    "spm-log": "^0.1.0",
+    "commander": "2.3.0",
+    "express": "4.7.4",
+    "gaze": "0.6.4",
+    "http-proxy": "1.1.6",
+    "serve-spm": "0.3.9",
+    "spm-log": "0.1.0",
     "tiny-lr": "0.0.9"
+  },
+  "devDependencies": {
+
   }
 }
