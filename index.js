@@ -11,6 +11,7 @@ var serveSPM = require('serve-spm');
 var log = require('spm-log');
 var httpProxy = require('http-proxy');
 var combo = require('connect-combo');
+var open = require('open');
 var util = require('./util');
 
 var DEFAULT_PORT = 8000;
@@ -60,20 +61,25 @@ app.use(combo({
 util.isPortInUse(program.port || DEFAULT_PORT, function(port) {
   log.error('server', 'port %s in in use', port);
 }, function(err, port) {
-  app.listen(port);
-  log.info('server', 'listen on %s', port);
+  app.listen(port, function(e) {
+    if (e) return log.error('error', e);
+    log.info('server', 'listen on %s', port);
 
-  // Https.
-  if (program.https) {
-    httpProxy.createServer({
-      ssl: {
-        key: fs.readFileSync(join(__dirname, 'keys/key.pem')),
-        cert: fs.readFileSync(join(__dirname, 'keys/cert.pem'))
-      },
-      target: 'http://localhost:' + port,
-      secure: true
-    }).listen(443);
-  }
+    // Open project in browser.
+    open('http://localhost:' + port);
+
+    // Https.
+    if (program.https) {
+      httpProxy.createServer({
+        ssl: {
+          key: fs.readFileSync(join(__dirname, 'keys/key.pem')),
+          cert: fs.readFileSync(join(__dirname, 'keys/cert.pem'))
+        },
+        target: 'http://localhost:' + port,
+        secure: true
+      }).listen(443);
+    }
+  });
 });
 
 // Livereload.
