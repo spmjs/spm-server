@@ -44,7 +44,7 @@ module.exports = function(options, callback) {
   app.use(combo({
     directory: join(process.cwd(), 'dist'),
     proxy: process.env.ONLINE_SERVER || 'https://a.alipayobjects.com',
-    cache: true,
+    cache: false,
     log: true,
     static: true
   }));

@@ -36,3 +36,8 @@ require('spm-server')(options);
 * `--idleading <idleading>`, prefix of module name, default: `{{name}}/{{version}}`
 * `--https`, enable https proxy
 * `--livereload`, enable livereload
+
+## TODO
+
+* [ ] decombo
+* [ ] directory middlewares
