@@ -25,6 +25,10 @@ $ npm install spm-server -g
 $ spm-server [options]
 ```
 
+```javascript
+require('spm-server').run(options);
+```
+
 ## Options
 
 * `-p, --port <port>`, server port, default: `8000`
