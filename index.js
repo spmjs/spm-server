@@ -13,21 +13,25 @@ var combo = require('connect-combo');
 var open = require('open');
 var spmrc = require('spmrc');
 var util = require('./util');
+var http = require('http');
 
 var defaults = {
   port: 8000
 };
 
-exports.run = function(options) {
+module.exports = function(options, callback) {
 
-  program
-    .version(require('./package').version, '-v, --version')
-    .option('-p, --port <port>', 'server port, default: 8000')
-    .option('-b, --base <path>', 'base path to access package in production')
-    .option('--idleading <idleading>', 'prefix of module name, default: {{name}}/{{version}}')
-    .option('--https', 'enable https proxy')
-    .option('--livereload', 'enable livereload')
-    .parse(process.argv);
+  if (!options.noArgvParse) {
+    program
+      .version(require('./package').version, '-v, --version')
+      .option('-p, --port <port>', 'server port, default: 8000')
+      .option('-b, --base <path>', 'base path to access package in production')
+      .option('--idleading <idleading>', 'prefix of module name, default: {{name}}/{{version}}')
+      .option('--https', 'enable https proxy')
+      .option('--livereload', 'enable livereload')
+      .option('--no-open', 'disable open in default browser')
+      .parse(process.argv);
+  }
 
   var args = extend({}, defaults, program, options);
 
@@ -45,16 +49,22 @@ exports.run = function(options) {
     static: true
   }));
 
+  var server = http.createServer(app);
+
   // Listen.
   util.isPortInUse(args.port, function(port) {
     log.error('server', 'port %s in in use', port);
   }, function(err, port) {
-    app.listen(port, function(e) {
+    server.listen(port, function(e) {
       if (e) return log.error('error', e);
       log.info('server', 'listen on %s', port);
 
       // Open project in browser.
-      open('http://localhost:' + port);
+      if (args.open) {
+        open('http://localhost:' + port);
+      }
+
+      callback = callback || function() {};
 
       // Https.
       if (args.https) {
@@ -66,7 +76,9 @@ exports.run = function(options) {
           },
           target: 'http://localhost:' + port,
           secure: true
-        }).listen(443);
+        }).listen(443, callback);
+      } else {
+        callback();
       }
     });
   });
@@ -91,4 +103,6 @@ exports.run = function(options) {
       });
     });
   }
+
+  return server;
 };

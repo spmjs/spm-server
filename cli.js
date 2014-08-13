@@ -1,3 +1,5 @@
 #!/usr/bin/env node
 
-require('./').run();
+require('./')(function() {
+  console.log('ok');
+});

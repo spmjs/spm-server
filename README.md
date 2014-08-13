@@ -26,7 +26,7 @@ $ spm-server [options]
 ```
 
 ```javascript
-require('spm-server').run(options);
+require('spm-server')(options);
 ```
 
 ## Options
