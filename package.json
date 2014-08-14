@@ -31,6 +31,7 @@
     "gaze": "0.6.4",
     "http-proxy": "1.2.0",
     "open": "0.0.5",
+    "request": "^2.40.0",
     "serve-spm": "0.4.0",
     "spm-log": "0.1.1",
     "spmrc": "1.2.0",

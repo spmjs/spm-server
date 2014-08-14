@@ -14,6 +14,7 @@ var open = require('open');
 var spmrc = require('spmrc');
 var util = require('./util');
 var http = require('http');
+var request = require('request');
 
 var defaults = {
   port: 8000
@@ -46,7 +47,21 @@ module.exports = function(options, callback) {
     proxy: process.env.ONLINE_SERVER || 'https://a.alipayobjects.com',
     cache: false,
     log: true,
-    static: true
+    static: true,
+    beforeProxy: function(urlPath, cb, next) {
+      var pkg = serveSPM.util.getPkg(process.cwd());
+      var re = new RegExp('^/'+pkg.name+'/'+pkg.version+'/');
+      if (re.test(urlPath)) {
+        request('http://localhost:'+args.port+urlPath, function(err, res, body) {
+          if (err || res.statusCode >= 300) {
+            return next();
+          }
+          cb(null, body);
+        });
+      } else {
+        next();
+      }
+    }
   }));
 
   var server = http.createServer(app);
@@ -86,8 +101,8 @@ module.exports = function(options, callback) {
   // Livereload.
   if (args.livereload) {
     var port = process.env.LR_PORT || 35729;
-    var server = tinylr();
-    server.listen(port, function(err) {
+    var lrServer = tinylr();
+    lrServer.listen(port, function(err) {
       if (err) {
         log.error('livereload', err);
         return;
