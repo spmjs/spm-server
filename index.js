@@ -61,7 +61,8 @@ module.exports = function(options, callback) {
       var pkg = serveSPM.util.getPkg(args.cwd);
       var re = new RegExp('^/'+pkg.name+'/'+pkg.version+'/');
       if (re.test(urlPath) || urlPath.indexOf(args.base) === 0) {
-        request('http://localhost:'+args.port+urlPath, function(err, res, body) {
+        var url = 'http://localhost:' + args.port + urlPath;
+        request({url:url,headers:{'servespmexit':'1'}}, function(err, res, body) {
           if (err || res.statusCode >= 300) {
             return next();
           }

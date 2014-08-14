@@ -45,7 +45,12 @@ describe('index', function() {
                   // combo all
                   local('??seajs/2.2.0/sea.js,jquery/1.7.2/jquery.js,normal/0.1.0/index.js', function(err, res, body) {
                     fileEqual(body, 'normal/sea_jquery_index.js');
-                    done();
+
+                    // root project but 404
+                    local('normal/0.1.0/notfound.js', function(err, res, body) {
+                      res.statusCode.should.be.equal(404);
+                      done();
+                    });
                   });
                 });
               });
