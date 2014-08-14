@@ -1,15 +1,9 @@
 # spm-server
 
-[![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
-[![Test coverage][coveralls-image]][coveralls-url]
-
-[npm-image]: https://img.shields.io/npm/v/spm-server.svg?style=flat
-[npm-url]: https://npmjs.org/package/spm-server
-[travis-image]: https://img.shields.io/travis/spmjs/spm-server.svg?style=flat
-[travis-url]: https://travis-ci.org/spmjs/spm-server
-[coveralls-image]: https://img.shields.io/coveralls/spmjs/spm-server.svg?style=flat
-[coveralls-url]: https://coveralls.io/r/spmjs/spm-server?branch=master
+[![NPM version](https://img.shields.io/npm/v/spm-server.svg?style=flat)](https://npmjs.org/package/spm-server)
+[![Build Status](https://img.shields.io/travis/spmjs/spm-server.svg?style=flat)](https://travis-ci.org/spmjs/spm-server)
+[![Coverage Status](https://img.shields.io/coveralls/spmjs/spm-server.svg?style=flat)](https://coveralls.io/r/spmjs/spm-server)
+[![NPM downloads](http://img.shields.io/npm/dm/spm-server.svg?style=flat)](https://npmjs.org/package/spm-server)
 
 Server for spm.
 
@@ -39,5 +33,4 @@ require('spm-server')(options);
 
 ## TODO
 
-* [ ] decombo
 * [ ] directory middlewares
