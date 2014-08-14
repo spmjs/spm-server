@@ -5,15 +5,14 @@ var fs = require('fs');
 var relative = require('path').relative;
 var express = require('express');
 var tinylr = require('tiny-lr');
-var Gaze = require('gaze');
 var serveSPM = require('serve-spm');
 var log = require('spm-log');
 var httpProxy = require('http-proxy');
 var combo = require('connect-combo');
 var open = require('open');
-var spmrc = require('spmrc');
 var http = require('http');
 var request = require('request');
+var watch = require('glob-watcher');
 var util = require('./util');
 
 var defaults = {
@@ -119,12 +118,10 @@ module.exports = function(options, callback) {
       }
       log.info('livereload', 'listened on %s', port);
 
-      var installPath = spmrc.get('install.path');
-      var gaze = new Gaze(['**', '!./{node-modules,'+installPath+'}/**'], {});
-      gaze.on('all', function(event, filepath) {
-        server.changed({body: {files:[filepath]}});
-        var relativePath = relative(args.cwd, filepath);
-        log.info('livereload', '%s was %s', relativePath, event);
+      watch(['**', '!./{node-modules,sea-modules,spm_modules,_site}/**'], function(event) {
+        var relativePath = relative(args.cwd, event.path);
+        lrServer.changed({body: {files:[event.path]}});
+        log.info('livereload', '%s was %s', relativePath, event.type);
       });
     });
   }
