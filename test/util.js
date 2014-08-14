@@ -26,4 +26,14 @@ describe('util', function() {
     util.template('{{a}}', {a:1}).should.be.equal('1');
     util.template('{{b}}', {a:1}).should.be.equal('');
   });
+
+  it('normalizeBase', function() {
+    util.normalizeBase('http://a.com/b/c/').should.be.equal('/b/c/');
+    util.normalizeBase('http://a.com/b/c').should.be.equal('/b/c/');
+    util.normalizeBase('https://a.com/b/c').should.be.equal('/b/c/');
+    util.normalizeBase('b/c').should.be.equal('/b/c/');
+    util.normalizeBase('/b/c').should.be.equal('/b/c/');
+    util.normalizeBase('/b/c/').should.be.equal('/b/c/');
+    util.normalizeBase(false).should.be.false;
+  });
 });

@@ -12,12 +12,13 @@ var httpProxy = require('http-proxy');
 var combo = require('connect-combo');
 var open = require('open');
 var spmrc = require('spmrc');
-var util = require('./util');
 var http = require('http');
 var request = require('request');
+var util = require('./util');
 
 var defaults = {
-  port: 8000
+  port: 8000,
+  cwd: process.cwd()
 };
 
 module.exports = function(options, callback) {
@@ -36,22 +37,30 @@ module.exports = function(options, callback) {
 
   var args = extend({}, defaults, program, options);
 
+  // normalize base
+  args.base = util.normalizeBase(args.base);
+  var paths;
+  if (args.base) {
+    paths = [[args.base, '']];
+  }
+
   var app = express();
 
-  app.use(serveSPM(process.cwd(), {
-    log: true
+  app.use(serveSPM(args.cwd, {
+    log: true,
+    paths: paths
   }));
 
   app.use(combo({
-    directory: join(process.cwd(), 'dist'),
+    directory: join(args.cwd, 'dist'),
     proxy: process.env.ONLINE_SERVER || 'https://a.alipayobjects.com',
     cache: false,
     log: true,
     static: true,
     beforeProxy: function(urlPath, cb, next) {
-      var pkg = serveSPM.util.getPkg(process.cwd());
+      var pkg = serveSPM.util.getPkg(args.cwd);
       var re = new RegExp('^/'+pkg.name+'/'+pkg.version+'/');
-      if (re.test(urlPath)) {
+      if (re.test(urlPath) || urlPath.indexOf(args.base) === 0) {
         request('http://localhost:'+args.port+urlPath, function(err, res, body) {
           if (err || res.statusCode >= 300) {
             return next();
@@ -113,7 +122,7 @@ module.exports = function(options, callback) {
       var gaze = new Gaze(['**', '!./{node-modules,'+installPath+'}/**'], {});
       gaze.on('all', function(event, filepath) {
         server.changed({body: {files:[filepath]}});
-        var relativePath = relative(process.cwd(), filepath);
+        var relativePath = relative(args.cwd, filepath);
         log.info('livereload', '%s was %s', relativePath, event);
       });
     });
