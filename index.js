@@ -1,103 +1,130 @@
-#!/usr/bin/env node
-
+var extend = require('extend');
+var program = require('commander');
 var join = require('path').join;
 var fs = require('fs');
 var relative = require('path').relative;
-var program = require('commander');
 var express = require('express');
 var tinylr = require('tiny-lr');
-var Gaze = require('gaze');
 var serveSPM = require('serve-spm');
 var log = require('spm-log');
 var httpProxy = require('http-proxy');
 var combo = require('connect-combo');
 var open = require('open');
+var http = require('http');
+var request = require('request');
+var watch = require('glob-watcher');
 var util = require('./util');
 
-var DEFAULT_PORT = 8000;
+var defaults = {
+  port: 8000,
+  cwd: process.cwd()
+};
 
-program
-  .version(require('./package').version, '-v, --version')
-  .option('-p, --port <port>', 'server port, default: 8000')
-  .option('-b, --base <path>', 'base path to access package in production')
-  .option('--idleading <idleading>', 'prefix of module name, default: {{name}}/{{version}}')
-  .option('--https', 'enable https proxy')
-  .option('--livereload', 'enable livereload')
-  .parse(process.argv);
+module.exports = function(options, callback) {
 
-var app = express();
-
-// Map dist to src.
-app.use(function(req, res, next) {
-  var base = program.base || 'dist';
-  var idleading = program.idleading || '{{name}}/{{version}}';
-  var pkg = require(join(process.cwd(), 'package'));
-  var id = util.template(idleading, pkg);
-  var prefix = join(base, id);
-  if (prefix[0] !== '/') {
-    prefix = '/' + prefix;
+  if (!options.noArgvParse) {
+    program
+      .version(require('./package').version, '-v, --version')
+      .option('-p, --port <port>', 'server port, default: 8000')
+      .option('-b, --base <path>', 'base path to access package in production')
+      .option('--idleading <idleading>', 'prefix of module name, default: {{name}}/{{version}}')
+      .option('--https', 'enable https proxy')
+      .option('--livereload', 'enable livereload')
+      .option('--no-open', 'disable open in default browser')
+      .parse(process.argv);
   }
 
-  if (req.url.indexOf(prefix) === 0) {
-    req.url = req.url.replace(prefix, '');
+  var args = extend({}, defaults, program, options);
+
+  // normalize base
+  args.base = util.normalizeBase(args.base);
+  var paths;
+  if (args.base) {
+    paths = [[args.base, '']];
   }
 
-  next();
-});
+  var app = express();
 
-app.use(serveSPM(process.cwd(), {
-  log: true
-}));
+  app.use(serveSPM(args.cwd, {
+    log: true,
+    paths: paths
+  }));
 
-app.use(combo({
-  directory: join(process.cwd(), 'dist'),
-  proxy: process.env.ONLINE_SERVER || 'https://a.alipayobjects.com',
-  cache: true,
-  log: true,
-  static: true
-}));
-
-// Listen.
-util.isPortInUse(program.port || DEFAULT_PORT, function(port) {
-  log.error('server', 'port %s in in use', port);
-}, function(err, port) {
-  app.listen(port, function(e) {
-    if (e) return log.error('error', e);
-    log.info('server', 'listen on %s', port);
-
-    // Open project in browser.
-    open('http://localhost:' + port);
-
-    // Https.
-    if (program.https) {
-      httpProxy.createServer({
-        ssl: {
-          key: fs.readFileSync(join(__dirname, 'keys/key.pem')),
-          cert: fs.readFileSync(join(__dirname, 'keys/cert.pem'))
-        },
-        target: 'http://localhost:' + port,
-        secure: true
-      }).listen(443);
+  app.use(combo({
+    directory: join(args.cwd, 'dist'),
+    proxy: process.env.ONLINE_SERVER || 'https://a.alipayobjects.com',
+    cache: false,
+    log: true,
+    static: true,
+    beforeProxy: function(urlPath, cb, next) {
+      var pkg = serveSPM.util.getPkg(args.cwd);
+      var re = new RegExp('^/'+pkg.name+'/'+pkg.version+'/');
+      if (re.test(urlPath) || urlPath.indexOf(args.base) === 0) {
+        var url = 'http://localhost:' + args.port + urlPath;
+        request({url:url,headers:{'servespmexit':'1'}}, function(err, res, body) {
+          if (err || res.statusCode >= 300) {
+            return next();
+          }
+          cb(null, body);
+        });
+      } else {
+        next();
+      }
     }
-  });
-});
+  }));
 
-// Livereload.
-if (program.livereload) {
-  var port = process.env.LR_PORT || 35729;
-  var server = tinylr();
-  server.listen(port, function(err) {
-    if (err) {
-      log.error('livereload', err);
-      return;
-    }
-    log.info('livereload', 'listened on %s', port);
+  var server = http.createServer(app);
 
-    var gaze = new Gaze(['**', '!./{node-modules,sea-modules}/**'], {});
-    gaze.on('all', function(event, filepath) {
-      server.changed({body: {files:[filepath]}});
-      var relativePath = relative(process.cwd(), filepath);
-      log.info('livereload', '%s was %s', relativePath, event);
+  // Listen.
+  util.isPortInUse(args.port, function(port) {
+    log.error('server', 'port %s in in use', port);
+  }, function(err, port) {
+    server.listen(port, function(e) {
+      if (e) return log.error('error', e);
+      log.info('server', 'listen on %s', port);
+
+      // Open project in browser.
+      if (args.open) {
+        open('http://localhost:' + port);
+      }
+
+      callback = callback || function() {};
+
+      // Https.
+      if (args.https) {
+        log.info('https', 'enable');
+        httpProxy.createServer({
+          ssl: {
+            key: fs.readFileSync(join(__dirname, 'keys/key.pem')),
+            cert: fs.readFileSync(join(__dirname, 'keys/cert.pem'))
+          },
+          target: 'http://localhost:' + port,
+          secure: true
+        }).listen(443, callback);
+      } else {
+        callback();
+      }
     });
   });
-}
+
+  // Livereload.
+  if (args.livereload) {
+    var port = process.env.LR_PORT || 35729;
+    var lrServer = tinylr();
+    lrServer.listen(port, function(err) {
+      if (err) {
+        log.error('livereload', err);
+        return;
+      }
+      log.info('livereload', 'listened on %s', port);
+
+      watch(['**', '!./{node-modules,sea-modules,spm_modules,_site}/**'], function(event) {
+        var relativePath = relative(args.cwd, event.path);
+        lrServer.changed({body: {files:[event.path]}});
+        log.info('livereload', '%s was %s', relativePath, event.type);
+      });
+    });
+  }
+
+  return server;
+};

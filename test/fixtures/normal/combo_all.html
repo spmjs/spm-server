@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+  <title>combo all</title>
+</head>
+<body>
+
+<script src="/??seajs/2.2.0/sea.js,jquery/1.7.2/jquery.js,normal/0.1.0/index.js"></script>
+<script>
+  seajs.config({
+    base: '/'
+  });
+
+  seajs.use('normal/0.1.0/index');
+  seajs.use('jquery/1.7.2/jquery', function($) {
+    console.log('jquery: %s', $().jquery === '1.7.2');
+  });
+</script>
+</body>
+</html>
