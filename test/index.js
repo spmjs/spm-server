@@ -154,6 +154,49 @@ describe('index', function() {
 
   });
 
+  describe('middlewares', function() {
+
+    before(function(done) {
+      var opts = extend(defaults, {
+        cwd: join(__dirname, './fixtures/standalone'),
+        middleware: {
+          before: function(req, res, next) {
+            if (req.url === '/before') {
+              return res.end('before');
+            }
+            next();
+          },
+          after: function(req, res, next) {
+            if (req.url === '/after') {
+              return res.end('after');
+            }
+            next();
+          }
+        }
+      });
+      server = SpmServer(opts, done);
+    });
+
+    after(function() {
+      server && server.close();
+    });
+
+    it('before', function(done) {
+      local('before', function(err, res, body) {
+        body.should.be.equal('before');
+        done();
+      });
+    });
+
+    it('after', function(done) {
+      local('after', function(err, res, body) {
+        body.should.be.equal('after');
+        done();
+      });
+    });
+
+  });
+
 });
 
 function local(pathname, cb, opts) {

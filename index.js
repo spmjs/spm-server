@@ -47,10 +47,18 @@ module.exports = function(options, callback) {
 
   var app = express();
 
+  if (args.middleware && args.middleware.before) {
+    app.use(args.middleware.before);
+  }
+
   app.use(serveSPM(args.cwd, {
     log: true,
     paths: paths
   }));
+
+  if (args.middleware && args.middleware.after) {
+    app.use(args.middleware.after);
+  }
 
   app.use(combo({
     directory: join(args.cwd, 'dist'),
