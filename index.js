@@ -22,6 +22,8 @@ var defaults = {
 
 module.exports = function(options, callback) {
 
+  options = options || {};
+
   if (!options.noArgvParse) {
     program
       .version(require('./package').version, '-v, --version')
