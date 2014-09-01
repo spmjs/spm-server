@@ -2,6 +2,11 @@
 
 ---
 
+## 0.2.3
+
+- 添加 directory middleware，而不是直接 404
+- 默认不在浏览器里打开，可以通过 `--open` 启用
+
 ## 0.2.2
 
 - [`#928259`](https://github.com/spmjs/spm-server/commit/928259) 支持自定义 middleware
