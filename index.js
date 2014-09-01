@@ -51,6 +51,27 @@ module.exports = function(options, callback) {
     app.use(args.middleware.before);
   }
 
+  // dir middleware
+  app.use(function(req, res, next) {
+    var file = join(args.cwd, req.url);
+
+    if (!fs.existsSync(file)) {
+      return next();
+    }
+
+    var isDir = fs.statSync(file).isDirectory();
+    if (!isDir) return next();
+
+    if (!/\/$/.test(file)) {
+      return res.redirect(req.url + '/');
+    }
+
+    var html = renderDir(file);
+    res.setHeader('Content-Type', 'text/html');
+    res.writeHead(200);
+    res.end(html);
+  });
+
   app.use(serveSPM(args.cwd, {
     log: true,
     paths: paths
@@ -138,3 +159,14 @@ module.exports = function(options, callback) {
 
   return server;
 };
+
+function renderDir(filepath) {
+  var list = fs.readdirSync(filepath);
+  var html = list.map(function(item) {
+    if (item === '.' || item === '..') {
+      return '';
+    }
+    return '<li><a href="'+item+'">'+item+'</a></li>';
+  });
+  return html.join('\n');
+}
