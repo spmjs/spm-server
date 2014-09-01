@@ -86,6 +86,13 @@ describe('index', function() {
       });
     });
 
+    it('directory', function(done) {
+      local('', function(err, res, body) {
+        body.should.be.containEql('<li><a href="dist">dist</a></li>');
+        done();
+      });
+    });
+
   });
 
   describe('standalone', function() {
