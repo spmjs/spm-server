@@ -32,7 +32,7 @@ module.exports = function(options, callback) {
       .option('--idleading <idleading>', 'prefix of module name, default: {{name}}/{{version}}')
       .option('--https', 'enable https proxy')
       .option('--livereload', 'enable livereload')
-      .option('--no-open', 'disable open in default browser')
+      .option('--open', 'enable open in default browser')
       .parse(process.argv);
   }
 
