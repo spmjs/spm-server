@@ -51,6 +51,11 @@ module.exports = function(options, callback) {
     app.use(args.middleware.before);
   }
 
+  app.use(serveSPM(args.cwd, {
+    log: true,
+    paths: paths
+  }));
+
   // dir middleware
   app.use(function(req, res, next) {
     var file = join(args.cwd, req.url);
@@ -71,11 +76,6 @@ module.exports = function(options, callback) {
     res.writeHead(200);
     res.end(html);
   });
-
-  app.use(serveSPM(args.cwd, {
-    log: true,
-    paths: paths
-  }));
 
   if (args.middleware && args.middleware.after) {
     app.use(args.middleware.after);
