@@ -2,6 +2,10 @@
 
 ---
 
+## 0.2.4
+
+- 调整 middlware 顺序，移动 serve-spm 到目录解析后面
+
 ## 0.2.3
 
 - 添加 directory middleware，而不是直接 404
