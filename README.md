@@ -5,7 +5,7 @@
 [![Coverage Status](https://img.shields.io/coveralls/spmjs/spm-server.svg?style=flat)](https://coveralls.io/r/spmjs/spm-server)
 [![NPM downloads](http://img.shields.io/npm/dm/spm-server.svg?style=flat)](https://npmjs.org/package/spm-server)
 
-Server for spm, [documentation](http://sorrycc.gitbooks.io/spm-handbook/develop-project/spm-server.html).
+Server for spm, [documentation](http://sorrycc.gitbooks.io/spm-handbook/develop-project/spm-server.html), [中文上手文档](https://github.com/spmjs/spm-server/issues/7).
 
 ## Install
 
