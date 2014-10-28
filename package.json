@@ -24,17 +24,17 @@
   },
   "homepage": "https://github.com/spmjs/spm-server",
   "dependencies": {
-    "commander": "2.3.0",
-    "connect-combo": "0.2.6",
-    "express": "4.8.3",
-    "extend": "1.3.0",
-    "glob-watcher": "0.0.6",
-    "http-proxy": "1.2.0",
-    "open": "0.0.5",
-    "request": "^2.40.0",
-    "serve-spm": "0.5.0",
-    "spm-log": "0.1.1",
-    "tiny-lr": "0.1.0"
+    "commander": "~2.3.0",
+    "connect-combo": "~0.2.6",
+    "express": "~4.8.3",
+    "extend": "~1.3.0",
+    "glob-watcher": "~0.0.6",
+    "http-proxy": "~1.2.0",
+    "open": "~0.0.5",
+    "request": "~2.40.0",
+    "serve-spm": "~0.5.0",
+    "spm-log": "~0.1.1",
+    "tiny-lr": "~0.1.0"
   },
   "devDependencies": {
     "coveralls": "^2.10.0",
