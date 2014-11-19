@@ -52,7 +52,7 @@ module.exports = function(options, callback) {
   }
 
   app.use(serveSPM(args.cwd, {
-    log: true,
+    log: console.log,
     paths: paths
   }));
 
@@ -83,12 +83,12 @@ module.exports = function(options, callback) {
 
   app.use(combo({
     directory: join(args.cwd, 'dist'),
-    proxy: process.env.ONLINE_SERVER || 'https://a.alipayobjects.com',
+    proxy: process.env.ONLINE_SERVER || 'https://a.test.alipay.net',
     cache: false,
     log: true,
     static: true,
     beforeProxy: function(urlPath, cb, next) {
-      var pkg = serveSPM.util.getPkg(args.cwd);
+      var pkg = serveSPM.util.getPackage(args.cwd);
       var re = new RegExp('^/'+pkg.name+'/'+pkg.version+'/');
       if (re.test(urlPath) || urlPath.indexOf(args.base) === 0) {
         var url = 'http://localhost:' + args.port + urlPath;
