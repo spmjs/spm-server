@@ -15,18 +15,26 @@ $ npm install spm-server -g
 
 ## Usage
 
+1. use in command line
+
 ```bash
 $ spm-server [options]
 ```
 
+2. use api for customize
+
 ```javascript
-require('spm-server')(options);
+require('spm-server')(root)
+  .use(middleware())
+  .spm()
+  .combo()
+  .directory()
+  .listen(8000);
 ```
 
 ## Options
 
 * `-p, --port <port>`, server port, default: `8000`
 * `-b, --base <path>`, base path to access package in production
-* `--idleading <idleading>`, prefix of module name, default: `{{name}}/{{version}}`
 * `--https`, enable https proxy
 * `--livereload`, enable livereload
