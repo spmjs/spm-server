@@ -5,6 +5,9 @@
     "dependencies": {
       "type": "1.0.0"
     },
+    "devDependencies": {
+      "seajs": "2.2.0"
+    },
     "buildArgs": "--include relative"
   }
 }

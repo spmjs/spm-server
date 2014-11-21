@@ -1,219 +1,163 @@
 var join = require('path').join;
-var request = require('request');
-var extend = require('extend');
-var fs = require('fs');
-var SpmServer = require('../');
+var request = require('supertest');
+var SPMServer = require('../lib/');
 
 var port = 12345;
-var server;
+var app;
 
-var defaults = {
-  noArgvParse: true,
-  open: false,
-  port: port
-};
+function getApp(project, base) {
+  var paths = base ? [[base,'']] : null;
+  return SPMServer(join(__dirname, 'fixtures', project))
+    .spm({
+      paths: paths
+    })
+    .combo()
+    .directory()
+    .static()
+    .port(port)
+    .app;
+}
 
 describe('index', function() {
 
   describe('normal', function() {
 
-    before(function(done) {
-      var opts = extend(defaults, {
-        cwd: join(__dirname, './fixtures/normal')
-      });
-      server = SpmServer(opts, done);
-    });
-
-    after(function() {
-      server && server.close();
+    before(function() {
+      app = getApp('normal');
     });
 
     it('seajs', function(done) {
-      local('seajs/seajs/2.2.0/sea.js', function (err, res, body) {
-        body.should.startWith('/*! Sea.js 2.2.0 | seajs.org/LICENSE.md */\n');
-        done();
-      });
+      request(app.listen())
+        .get('/seajs/seajs/2.2.0/sea.js')
+        .expect(200, done);
     });
 
     it('index', function(done) {
-      local('normal/0.1.0/index.js', function(err, res, body) {
-        fileEqual(body, 'normal/index.js');
-        done();
-      });
+      request(app.listen())
+        .get('/normal/0.1.0/index.js')
+        .expect(readFile('normal/index.js'))
+        .expect(200, done);
     });
-
 
     it('jquery', function(done) {
-      local('jquery/1.7.2/jquery.js', function (err, res, body) {
-        body.should.startWith('define("jquery/1.7.2/jquery",[],function(e,t,n)');
-        body.should.containEql('selector:"",jquery:"1.7.2"');
-        done();
-      });
+      request(app.listen())
+        .get('/jquery/1.7.2/jquery.js')
+        .expect(/^define\(\"jquery\/1\.7\.2\/jquery",\[\],function\(e,t,n\)/)
+        .expect(/selector:\"\",jquery:\"1\.7\.2\"/)
+        .expect(200, done);
     });
 
-    it('type', function(done) {
-      local('type/1.0.0/index.js', function(err, res, body) {
-        fileEqual(body, 'normal/type.js');
-        done();
-      });
+    it('type, go dist first', function(done) {
+      request(app.listen())
+        .get('/type/1.0.0/index.js')
+        .expect(readFile('normal/type.js'))
+        .expect(200, done);
     });
 
     it('relative', function(done) {
-      local('normal/0.1.0/relative.js', function(err, res, body) {
-        fileEqual(body, 'normal/relative.js');
-        done();
-      });
+      request(app.listen())
+        .get('/normal/0.1.0/relative.js')
+        .expect(readFile('normal/relative.js'))
+        .expect(200, done);
     });
 
     it('combo deps', function(done) {
-      local('??seajs/2.2.0/sea.js,jquery/1.7.2/jquery.js', function(err, res, body) {
-        fileEqual(body, 'normal/sea_jquery.js');
-        done();
-      });
+      var server = app.listen(port);
+      request(server)
+        .get('/??seajs/2.2.0/sea.js,jquery/1.7.2/jquery.js')
+        .expect(readFile('normal/sea_jquery.js'))
+        .expect(200, function() {
+          server && server.close();
+          done.apply(this, arguments);
+        });
     });
 
     it('combo all', function(done) {
-      local('??seajs/2.2.0/sea.js,jquery/1.7.2/jquery.js,normal/0.1.0/index.js', function(err, res, body) {
-        fileEqual(body, 'normal/sea_jquery_index.js');
-        done();
-      });
+      var server = app.listen(port);
+      request(server)
+        .get('/??seajs/2.2.0/sea.js,jquery/1.7.2/jquery.js,normal/0.1.0/index.js')
+        .expect(readFile('normal/sea_jquery_index.js'))
+        .expect(200, function() {
+          server && server.close();
+          done.apply(this, arguments);
+        });
     });
 
     it('root project but 404', function(done) {
-      local('normal/0.1.0/notfound.js', function(err, res, body) {
-        res.statusCode.should.be.equal(404);
-        done();
-      });
+      request(app.listen())
+        .get('/normal/0.1.0/notfound.js')
+        .expect(404, done);
     });
 
     it('directory', function(done) {
-      local('', function(err, res, body) {
-        body.should.be.containEql('<li><a href="dist">dist</a></li>');
-        done();
-      });
+      request(app.listen())
+        .get('/')
+        .expect(/<body class=\"directory\">/)
+        .expect(200, done);
     });
 
   });
 
   describe('standalone', function() {
 
-    before(function(done) {
-      var opts = extend(defaults, {
-        cwd: join(__dirname, './fixtures/standalone')
-      });
-      server = SpmServer(opts, done);
-    });
-
-    after(function() {
-      server && server.close();
+    before(function() {
+      app = getApp('standalone');
     });
 
     it('a.js', function(done) {
-      local('a.js', function(err, res, body) {
-        body.should.be.equal('console.log(\'a: true\');\n');
-        done();
-      });
+      request(app.listen())
+        .get('/a.js')
+        .expect('console.log(\'a: true\');\n')
+        .expect(200, done);
     });
 
     it('index', function(done) {
-      local('normal/0.1.0/index.js', function(err, res, body) {
-        fileEqual(body, 'standalone/index.js');
-        done();
-      });
+      request(app.listen())
+        .get('/normal/0.1.0/index.js')
+        .expect(readFile('standalone/index.js'))
+        .expect(200, done);
     });
 
     it('combo', function(done) {
-      local('??a.js,normal/0.1.0/index.js', function(err, res, body) {
-        fileEqual(body, 'standalone/a_index.js');
-        done();
-      });
+      var server = app.listen(port);
+      request(server)
+        .get('/??a.js,normal/0.1.0/index.js')
+        .expect(readFile('standalone/a_index.js'))
+        .expect(200, function() {
+          server && server.close();
+          done.apply(this, arguments);
+        });
     });
-
   });
 
   describe('standalone + base', function() {
 
-    before(function(done) {
-      var opts = extend(defaults, {
-        cwd: join(__dirname, './fixtures/standalone'),
-        base: 'group/project/9.9.9'
-      });
-      server = SpmServer(opts, done);
-    });
-
-    after(function() {
-      server && server.close();
+    before(function() {
+      app = getApp('standalone', '/group/project/9.9.9');
     });
 
     it('index', function(done) {
-      local('group/project/9.9.9/index.js', function(err, res, body) {
-        fileEqual(body, 'standalone/base_index.js');
-        done();
-      });
+      request(app.listen())
+        .get('/group/project/9.9.9/index.js')
+        .expect(readFile('standalone/base_index.js'))
+        .expect(200, done);
     });
 
     it('combo', function(done) {
-      local('??a.js,group/project/9.9.9/index.js', function(err, res, body) {
-        fileEqual(body, 'standalone/base_a_index.js');
-        done();
-      });
-    });
-
-  });
-
-  describe('middlewares', function() {
-
-    before(function(done) {
-      var opts = extend(defaults, {
-        cwd: join(__dirname, './fixtures/standalone'),
-        middleware: {
-          before: function(req, res, next) {
-            if (req.url === '/before') {
-              return res.end('before');
-            }
-            next();
-          },
-          after: function(req, res, next) {
-            if (req.url === '/after') {
-              return res.end('after');
-            }
-            next();
-          }
-        }
-      });
-      server = SpmServer(opts, done);
-    });
-
-    after(function() {
-      server && server.close();
-    });
-
-    it('before', function(done) {
-      local('before', function(err, res, body) {
-        body.should.be.equal('before');
-        done();
-      });
-    });
-
-    it('after', function(done) {
-      local('after', function(err, res, body) {
-        body.should.be.equal('after');
-        done();
-      });
+      var server = app.listen(port);
+      request(server)
+        .get('/??a.js,group/project/9.9.9/index.js')
+        .expect(readFile('standalone/base_a_index.js'))
+        .expect(200, function() {
+          server && server.close();
+          done.apply(this, arguments);
+        });
     });
 
   });
 
 });
 
-function local(pathname, cb, opts) {
-  var args = {
-    url: 'http://localhost:'+port+'/'+pathname
-  };
-  request(extend(args, opts), cb);
-}
-
-function fileEqual(body, filepath) {
-  filepath = join(__dirname, 'expect', filepath);
-  body.should.be.equal(fs.readFileSync(filepath, 'utf-8'));
+function readFile(filepath) {
+  return require('fs').readFileSync(join(__dirname, 'expect', filepath), 'utf-8');
 }

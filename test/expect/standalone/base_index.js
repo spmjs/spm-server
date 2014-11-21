@@ -4,7 +4,7 @@
 /* Config Base */
 seajs.config({base:'/'});
 
-define(function(require, exports, module){
+define('index', function(require, exports, module){
 var type = require("type/1.0.0/index.js");
 var relative = require('./relative');
 console.log('type: %s', type(function(){}) === 'dist');
@@ -14,4 +14,4 @@ console.log('relative: %s', relative === 'relative');
 
 
 /*! Sea.js Init */
-seajs.use('/group/project/9.9.9/index.js');
+seajs.use('/index.js');
