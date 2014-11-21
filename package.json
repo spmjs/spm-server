@@ -26,16 +26,16 @@
   "dependencies": {
     "extend": "2.0.0",
     "glob-watcher": "0.0.7",
-    "gnode": "0.1.0",
+    "gnode": "~0.1.0",
     "http-proxy": "1.6.2",
     "koa": "0.13.0",
     "koa-combo2": "0.2.0",
     "koa-logger": "1.2.2",
-    "koa-serve-index": "1.0.1",
+    "koa-serve-index": "~1.0.1",
     "koa-static": "1.4.7",
     "request": "2.48.0",
-    "serve-spm": "0.7.3",
-    "spm-log": "0.1.1",
+    "serve-spm": "~0.7.4",
+    "spm-log": "~0.1.1",
     "tiny-lr": "0.1.4"
   },
   "devDependencies": {
