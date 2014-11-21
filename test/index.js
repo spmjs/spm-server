@@ -13,7 +13,6 @@ function getApp(project, base) {
     })
     .combo()
     .directory()
-    .static()
     .port(port)
     .app;
 }
