@@ -2,6 +2,7 @@
 
 var program = require('commander');
 var SPMServer = require('./');
+var join = require('path').join;
 
 program
   .version(require('./package').version, '-v, --version')
@@ -16,11 +17,26 @@ if (program.base) {
   paths = [[require('./util').normalizeBase(program.base), '']];
 }
 
-var s = SPMServer(process.cwd())
-  .spm({paths:paths})
-  .combo()
-  .directory()
-  .listen(8000);
+var cwd = process.cwd();
+var args = program.args;
+
+if (args.length === 1) {
+  cwd = join(cwd, args[0]);
+}
+
+var s = SPMServer(cwd);
+
+if (args.length > 1) {
+  args.forEach(function(root) {
+    s.spm(root, {paths:paths});
+  });
+} else {
+  s.spm({paths:paths});
+}
+
+s.combo();
+s.directory();
+s.listen(8000);
 
 if (program.livereload) s.livereload();
 if (program.https) s.https();
