@@ -1,6 +1,6 @@
 {
   "name": "spm-server",
-  "version": "0.3.0",
+  "version": "0.3.0-beta1",
   "description": "Server for spm.",
   "main": "index.js",
   "scripts": {
