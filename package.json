@@ -1,7 +1,7 @@
 {
   "name": "spm-server",
   "version": "0.3.0-beta1",
-  "description": "Server for spm.",
+  "description": "Debug server for spm.",
   "main": "index.js",
   "scripts": {
     "test": "make test"
@@ -24,19 +24,20 @@
   },
   "homepage": "https://github.com/spmjs/spm-server",
   "dependencies": {
-    "extend": "2.0.0",
-    "glob-watcher": "0.0.7",
+    "commander": "~2.5.0",
+    "extend": "~2.0.0",
+    "glob-watcher": "~0.0.7",
     "gnode": "~0.1.0",
-    "http-proxy": "1.6.2",
-    "koa": "0.13.0",
-    "koa-combo2": "0.2.0",
-    "koa-logger": "1.2.2",
+    "http-proxy": "~1.6.2",
+    "koa": "~0.13.0",
+    "koa-combo2": "~0.2.0",
+    "koa-logger": "~1.2.2",
     "koa-serve-index": "~1.0.1",
-    "koa-static": "1.4.7",
-    "request": "2.48.0",
+    "koa-static": "~1.4.7",
+    "request": "~2.48.0",
     "serve-spm": "~0.7.4",
     "spm-log": "~0.1.1",
-    "tiny-lr": "0.1.4"
+    "tiny-lr": "~0.1.4"
   },
   "devDependencies": {
     "coveralls": "^2.10.0",
@@ -44,7 +45,6 @@
     "mocha": "~1.20.0",
     "request": "2.48.0",
     "should": "~4.0.0",
-    "supertest": "~0.15.0",
-    "type": "0.0.3"
+    "supertest": "~0.15.0"
   }
 }
