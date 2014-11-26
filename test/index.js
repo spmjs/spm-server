@@ -8,11 +8,13 @@ var app;
 function getApp(project, base) {
   var paths = base ? [[base,'']] : null;
   return SPMServer(join(__dirname, 'fixtures', project))
+    .combo()
+    .directory()
     .spm({
       paths: paths
     })
-    .combo()
-    .directory()
+    .cdn()
+    .static()
     .port(port)
     .app;
 }
