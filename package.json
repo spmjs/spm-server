@@ -24,7 +24,6 @@
   },
   "homepage": "https://github.com/spmjs/spm-server",
   "dependencies": {
-    "anyproxy": "~2.8.12",
     "co-request": "~0.2.0",
     "combo-url": "~0.2.0",
     "commander": "~2.5.0",
@@ -42,6 +41,9 @@
     "serve-spm": "~0.7.4",
     "spm-log": "~0.1.1",
     "tiny-lr": "~0.1.4"
+  },
+  "optionalDependencies": {
+    "anyproxy": "~2.8.12"
   },
   "devDependencies": {
     "coveralls": "^2.10.0",
