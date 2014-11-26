@@ -8,7 +8,7 @@ program
   .version(require('./package').version, '-v, --version')
   .option('-p, --port <port>', 'server port, default: 8000')
   .option('-b, --base <path>', 'base path to access package in production')
-  .option('--https', 'enable https proxy')
+  .option('--proxy', 'enable anyproxy on 8989')
   .option('--livereload', 'enable livereload')
   .parse(process.argv);
 
@@ -25,18 +25,20 @@ if (args.length === 1) {
 }
 
 var s = SPMServer(cwd);
+s.combo();
+s.directory();
 
 if (args.length > 1) {
   args.forEach(function(root) {
-    s.spm(root, {paths:paths});
+    s.spm(join(cwd, root), {paths:paths});
   });
 } else {
   s.spm({paths:paths});
 }
 
-s.combo();
-s.directory();
+s.cdn();
+s.static();
 s.listen(8000);
 
 if (program.livereload) s.livereload();
-if (program.https) s.https();
+if (program.proxy) s.proxy();
