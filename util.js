@@ -10,21 +10,6 @@ util.isPortInUse = function(port, error, success) {
   });
 };
 
-/*
-  Simple template
-
-  ```
-  var tpl = '{{name}}/{{version}}';
-  util.template(tpl, {name:'base', version: '1.0.0'});
-  ```
-*/
-util.template = function(format, data) {
-  if (!format) return '';
-  return format.replace(/{{([a-z]*)}}/g, function(all, match) {
-    return data[match] || '';
-  });
-};
-
 util.normalizeBase = function(base) {
   if (base) {
     var re = /^https?:\/\/[^\/]+?\//;
@@ -39,4 +24,4 @@ util.normalizeBase = function(base) {
     }
   }
   return base;
-}
+};

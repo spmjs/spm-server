@@ -2,6 +2,9 @@
   "name": "normal",
   "version": "0.1.0",
   "spm": {
+    "output": [
+      "multi-*.js"
+    ],
     "dependencies": {
       "type": "1.0.0"
     },

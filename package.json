@@ -1,7 +1,7 @@
 {
   "name": "spm-server",
-  "version": "0.2.5",
-  "description": "Server for spm.",
+  "version": "0.3.0",
+  "description": "Debug server for spm.",
   "main": "index.js",
   "scripts": {
     "test": "make test"
@@ -24,22 +24,35 @@
   },
   "homepage": "https://github.com/spmjs/spm-server",
   "dependencies": {
-    "commander": "~2.3.0",
-    "connect-combo": "~0.2.6",
-    "express": "~4.8.3",
-    "extend": "~1.3.0",
-    "glob-watcher": "~0.0.6",
-    "http-proxy": "~1.2.0",
-    "open": "~0.0.5",
-    "request": "~2.40.0",
-    "serve-spm": "~0.5.0",
+    "ali.gnode": "~0.1.0",
+    "co-request": "~0.2.0",
+    "coffee-script": "~1.3.3",
+    "combo-url": "~0.2.0",
+    "commander": "~2.5.0",
+    "debug": "~2.1.0",
+    "extend": "~2.0.0",
+    "glob-watcher": "~0.0.7",
+    "internal-ip": "~1.0.0",
+    "koa": "~0.13.0",
+    "koa-logger": "~1.2.2",
+    "koa-serve-index": "~1.0.1",
+    "koa-static": "~1.4.7",
+    "mime": "~1.2.11",
+    "request": "~2.48.0",
+    "serve-spm": "~0.7.4",
     "spm-log": "~0.1.1",
-    "tiny-lr": "~0.1.0"
+    "tiny-lr": "~0.1.4",
+    "weinre": "~2.0.0-pre-HZ79PDUK"
+  },
+  "optionalDependencies": {
+    "anyproxy": "~2.8.12"
   },
   "devDependencies": {
     "coveralls": "^2.10.0",
     "istanbul": "^0.2.11",
     "mocha": "~1.20.0",
-    "should": "~4.0.0"
+    "request": "2.48.0",
+    "should": "~4.0.0",
+    "supertest": "~0.15.0"
   }
 }
