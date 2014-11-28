@@ -2,6 +2,26 @@
 
 ---
 
+## 0.3.0
+
+- 重构组织方式，便于通过 gulpfile 之类的进行自定义，比如：
+
+  ```javascript
+require('spm-server')(root)
+  .serveSPM()
+  .combo('https://a.alipayobjects.com')
+  .livereload()
+  .https()
+  .listen(8000);
+```
+
+- [#10](https://github.com/spmjs/spm-server/issues/10) standalone 模式支持多个 script 同时引入
+- [#3](https://github.com/spmjs/spm-server/issues/3) 同时支持多个 spm 包
+- 优化目录索引，现在的样子不好看而且有时会报错
+- https 证书认证问题
+- 支持 weinre
+- livereload 无需借助 Chrome 插件
+
 ## 0.2.5
 
 - 更新版本，使用 `~` 前缀
