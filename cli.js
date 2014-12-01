@@ -39,7 +39,7 @@ if (args.length > 1) {
 
 s.cdn();
 s.static();
-s.listen(8000);
+s.listen(program.port || 8000);
 
 if (program.livereload) s.livereload();
 if (program.proxy) s.proxy();
