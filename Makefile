@@ -5,6 +5,6 @@ coveralls: test
 	cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
 
 debug:
-	node --harmony $(NODE_DEBUG) ./node_modules/.bin/_mocha -R spec -t 20000
+	node --harmony $(NODE_DEBUG) ./node_modules/.bin/_mocha -R spec -t 20000 --require should
 
 .PHONY: test

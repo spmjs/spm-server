@@ -1,8 +1,4 @@
-var net = require('net');
 var util = require('../util');
-
-var PORT = 12345;
-var noop = function(){};
 
 describe('util', function() {
 
