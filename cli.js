@@ -26,7 +26,7 @@ if (args.length === 1) {
   cwd = join(cwd, args[0]);
 }
 
-var s = SPMServer(cwd);
+var s = new SPMServer(cwd);
 s.combo();
 s.directory();
 

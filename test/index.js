@@ -7,7 +7,7 @@ var app;
 
 function getApp(project, base) {
   var paths = base ? [[base,'']] : null;
-  return SPMServer(join(__dirname, 'fixtures', project))
+  return new SPMServer(join(__dirname, 'fixtures', project))
     .combo()
     .directory()
     .spm({
