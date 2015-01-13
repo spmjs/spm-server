@@ -11,6 +11,7 @@ program
   .option('--proxy', 'enable anyproxy on 8989')
   .option('--livereload', 'enable livereload')
   .option('--weinre', 'enable weinre')
+  .option('--cache', 'enable 304 cache for spm')
   .parse(process.argv);
 
 var paths;
@@ -34,7 +35,7 @@ if (args.length > 1) {
     s.spm(join(cwd, root), {paths:paths});
   });
 } else {
-  s.spm({paths:paths});
+  s.spm({paths:paths,cache:program.cache});
 }
 
 s.cdn();

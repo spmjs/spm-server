@@ -38,3 +38,4 @@ require('spm-server')(root)
 * `-b, --base <path>`, base path to access package in production
 * `--https`, enable https proxy
 * `--livereload`, enable livereload
+* `--cache`, enable 304 cache for spm
