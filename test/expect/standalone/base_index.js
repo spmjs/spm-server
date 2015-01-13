@@ -26,7 +26,7 @@ seajs.config({base:'/'});
 
 define('index', function(require, exports, module){
 var type = require("type/1.0.0/index.js");
-var relative = require('./relative');
+var relative = require("./relative.js");
 console.log('type: %s', type(function(){}) === 'dist');
 console.log('relative: %s', relative === 'relative');
 
