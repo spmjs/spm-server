@@ -6,12 +6,11 @@ var port = 12345;
 var app;
 
 function getApp(project, base) {
-  var paths = base ? [[base,'']] : null;
   return new SPMServer(join(__dirname, 'fixtures', project))
     .combo()
     .directory()
     .spm({
-      paths: paths
+      base: base
     })
     .cdn()
     .static()
@@ -134,7 +133,7 @@ describe('index', function() {
   describe('standalone + base', function() {
 
     before(function() {
-      app = getApp('standalone', '/group/project/9.9.9');
+      app = getApp('standalone', '/group/project/9.9.9/');
     });
 
     it('index', function(done) {

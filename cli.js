@@ -14,11 +14,6 @@ program
   .option('--cache', 'enable 304 cache for spm')
   .parse(process.argv);
 
-var paths;
-if (program.base) {
-  paths = [[require('./util').normalizeBase(program.base), '']];
-}
-
 var cwd = process.cwd();
 var args = program.args;
 
@@ -30,12 +25,16 @@ var s = new SPMServer(cwd);
 s.combo();
 s.directory();
 
+var spmOpts = {
+  base: program.base,
+  cache: program.cache
+};
 if (args.length > 1) {
   args.forEach(function(root) {
-    s.spm(join(cwd, root), {paths:paths});
+    s.spm(join(cwd, root), spmOpts);
   });
 } else {
-  s.spm({paths:paths,cache:program.cache});
+  s.spm(spmOpts);
 }
 
 s.cdn();

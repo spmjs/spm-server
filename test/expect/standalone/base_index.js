@@ -22,7 +22,7 @@ if (typeof g_spm_init === 'undefined') {
 }
 
 /* Config Base */
-seajs.config({base:'/'});
+seajs.config({base:'/group/project/9.9.9/'});
 
 define('index', function(require, exports, module){
 var type = require("type/1.0.0/index.js");
