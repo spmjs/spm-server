@@ -43,9 +43,6 @@
     "tiny-lr": "~0.1.4",
     "weinre": "~2.0.0-pre-HZ79PDUK"
   },
-  "optionalDependencies": {
-    "anyproxy": "~2.8.12"
-  },
   "devDependencies": {
     "coveralls": "^2.10.0",
     "istanbul": "^0.2.11",
