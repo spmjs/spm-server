@@ -12,6 +12,7 @@ program
   .option('--livereload', 'enable livereload')
   .option('--weinre', 'enable weinre')
   .option('--cache', 'enable 304 cache for spm')
+  .option('--cdn <cdn>', 'cdn proxy, defaults: https://115.238.23.196^a.alipayobjects.com')
   .parse(process.argv);
 
 var cwd = process.cwd();
@@ -37,7 +38,9 @@ if (args.length > 1) {
   s.spm(spmOpts);
 }
 
-s.cdn();
+s.cdn({
+  proxy: program.cdn && program.cdn.split('^')
+});
 s.static();
 s.listen(program.port || 8000);
 
