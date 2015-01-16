@@ -2,6 +2,15 @@
 
 ---
 
+## 0.4.0
+
+- 更新 serve-spm 到 0.9.0
+- 命令行添加 cdn 参数，用于配置 cdn proxy
+- 删除 anyproxy 依赖，使用 proxy 时需要 `npm install anyproxy -g`
+- 切换依赖 ali.gnode 到 gnode
+- 端口占用时提示出错
+- 命令行参数 base 用途变更，改为配置 seajs 的 base, [spmjs/serve-spm#26](https://github.com/spmjs/serve-spm/issues/26)
+
 ## 0.3.1
 
 - 更新 serve-spm 到 ~0.8.1
