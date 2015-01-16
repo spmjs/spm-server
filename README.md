@@ -35,7 +35,9 @@ require('spm-server')(root)
 ## Options
 
 * `-p, --port <port>`, server port, default: `8000`
-* `-b, --base <path>`, base path to access package in production
-* `--https`, enable https proxy
+* `-b, --base <path>`, set seajs's base
+* `--proxy`, enable anyproxy on 8989
 * `--livereload`, enable livereload
+* `--weinre`, enable weinre
 * `--cache`, enable 304 cache for spm
+* `--cdn <cdn>`, cdn proxy, defaults: `https://115.238.23.196^a.alipayobjects.com`

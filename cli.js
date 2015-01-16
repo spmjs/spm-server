@@ -7,7 +7,7 @@ var join = require('path').join;
 program
   .version(require('./package').version, '-v, --version')
   .option('-p, --port <port>', 'server port, default: 8000')
-  .option('-b, --base <path>', 'base path to access package in production')
+  .option('-b, --base <path>', 'set seajs\'s base')
   .option('--proxy', 'enable anyproxy on 8989')
   .option('--livereload', 'enable livereload')
   .option('--weinre', 'enable weinre')
