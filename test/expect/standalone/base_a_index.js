@@ -36,4 +36,4 @@ console.log('relative: %s', relative === 'relative');
 
 
 /*! Init */
-g_spm_init('/index.js');
+g_spm_init('index.js');
