@@ -2,6 +2,12 @@
 
 ---
 
+## 0.4.2
+
+- deps: 更新 serve-spm 到 0.10.0
+- deps: 添加 bluebird，修复 node 0.10 下报错的问题，Fix [#21](https://github.com/spmjs/serve-spm/issues/21)
+- 添加 Access-Control-Allow-Origin 头，允许跨域访问
+
 ## 0.4.1
 
 - 更新命令行说明
