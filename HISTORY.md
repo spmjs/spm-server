@@ -2,6 +2,10 @@
 
 ---
 
+## 0.4.3
+
+- deps: 更新 serve-spm 到 0.11.0，支持 anima-template
+
 ## 0.4.2
 
 - deps: 更新 serve-spm 到 0.10.0
