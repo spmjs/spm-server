@@ -2,6 +2,10 @@
 
 ---
 
+## 0.4.4
+
+- deps: 更新 serve-spm 到 0.12.0，支持循环依赖、global 参数，以及升级到 seajs3
+
 ## 0.4.3
 
 - deps: 更新 serve-spm 到 0.11.0，支持 anima-template
