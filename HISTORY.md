@@ -2,6 +2,10 @@
 
 ---
 
+## 0.4.5
+
+- deps: 更新 serve-spm 到 0.13.0，支持 ignore 参数
+
 ## 0.4.4
 
 - deps: 更新 serve-spm 到 0.12.0，支持循环依赖、global 参数，以及升级到 seajs3
