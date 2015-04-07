@@ -2,6 +2,10 @@
 
 ---
 
+## 0.4.6
+
+- deps: 更新 serve-spm 到 0.14.1
+
 ## 0.4.5
 
 - deps: 更新 serve-spm 到 0.13.0，支持 ignore 参数
