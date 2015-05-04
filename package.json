@@ -1,6 +1,6 @@
 {
   "name": "spm-server",
-  "version": "0.4.6",
+  "version": "1.0.0",
   "description": "Debug server for spm.",
   "main": "index.js",
   "scripts": {
@@ -39,7 +39,7 @@
     "koa-serve-index": "~1.0.1",
     "koa-static": "~1.4.7",
     "mime": "~1.2.11",
-    "serve-spm": "~0.14.1",
+    "serve-spm": "~1.0.0",
     "spm-log": "~0.1.1",
     "tiny-lr": "~0.1.4",
     "weinre": "~2.0.0-pre-HZ79PDUK"
